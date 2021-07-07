@@ -1,11 +1,17 @@
 controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
-    controller.moveSprite(badguy)
+    badguy.setPosition(randint(0, 100), randint(0, 100))
+})
+controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
+    controller.moveSprite(person, 300, 300)
 })
 controller.right.onEvent(ControllerButtonEvent.Released, function () {
     controller.moveSprite(person, 100, 100)
 })
 controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
     controller.moveSprite(person, 40, 40)
+})
+controller.A.onEvent(ControllerButtonEvent.Released, function () {
+    controller.moveSprite(person, 100, 100)
 })
 let badguy: Sprite = null
 let person: Sprite = null
