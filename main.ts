@@ -7,9 +7,6 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
 controller.right.onEvent(ControllerButtonEvent.Released, function () {
     controller.moveSprite(person, 100, 100)
 })
-sprites.onOverlap(SpriteKind.Enemy, SpriteKind.Food, function (sprite, otherSprite) {
-    info.player1.changeLifeBy(-1)
-})
 controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
     controller.moveSprite(person, 40, 40)
 })
@@ -17,8 +14,134 @@ controller.A.onEvent(ControllerButtonEvent.Released, function () {
     controller.moveSprite(person, 100, 100)
 })
 info.onLifeZero(function () {
+    person.destroy(effects.spray, 500)
     game.over(false)
 })
+sprites.onOverlap(SpriteKind.Player, SpriteKind.Food, function (sprite, otherSprite) {
+    otherSprite.destroy()
+    donut = sprites.create(img`
+        . . . . . . b b b b a a . . . . 
+        . . . . b b d d d 3 3 3 a a . . 
+        . . . b d d d 3 3 3 3 3 3 a a . 
+        . . b d d 3 3 3 3 3 3 3 3 3 a . 
+        . b 3 d 3 3 3 3 3 b 3 3 3 3 a b 
+        . b 3 3 3 3 3 a a 3 3 3 3 3 a b 
+        b 3 3 3 3 3 a a 3 3 3 3 d a 4 b 
+        b 3 3 3 3 b a 3 3 3 3 3 d a 4 b 
+        b 3 3 3 3 3 3 3 3 3 3 d a 4 4 e 
+        a 3 3 3 3 3 3 3 3 3 d a 4 4 4 e 
+        a 3 3 3 3 3 3 3 d d a 4 4 4 e . 
+        a a 3 3 3 d d d a a 4 4 4 e e . 
+        . e a a a a a a 4 4 4 4 e e . . 
+        . . e e b b 4 4 4 4 b e e . . . 
+        . . . e e e e e e e e . . . . . 
+        . . . . . . . . . . . . . . . . 
+        `, SpriteKind.Food)
+    donut.setPosition(randint(0, 100), randint(0, 100))
+    info.changeLifeBy(1)
+})
+sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite, otherSprite) {
+    info.changeLifeBy(-1)
+    sprite.destroy(effects.ashes, 500)
+    pause(1000)
+    person = sprites.create(img`
+        . . . . . . . . . . . . . . . . 
+        . . . . . . f f f f . . . . . . 
+        . . . . f f f 2 2 f f f . . . . 
+        . . . f f f 2 2 2 2 f f f . . . 
+        . . f f f e e e e e e f f f . . 
+        . . f e e 2 2 2 2 2 2 e f f . . 
+        . f f e 2 f f f f f f 2 e f f . 
+        . f f f f f e e e e f f f f f . 
+        . . f e f b f 4 4 f b f e f . . 
+        . . f e 4 1 f d d f 1 4 e f . . 
+        . . e f f f f d d d 4 e f . . . 
+        . . f d d d d f 2 2 2 f e f . . 
+        . . f b b b b f 2 2 2 f 4 e . . 
+        . . f b b b b f 5 4 4 f . . . . 
+        . . . f c c f f f f f f . . . . 
+        . . . . f f . . . f f f . . . . 
+        `, SpriteKind.Player)
+    person.setPosition(randint(0, 100), randint(0, 100))
+    controller.moveSprite(person, 100, 100)
+    person.setStayInScreen(true)
+    animation.runImageAnimation(
+    person,
+    [img`
+        . . . . . . f f f f . . . . . . 
+        . . . . f f f 2 2 f f f . . . . 
+        . . . f f f 2 2 2 2 f f f . . . 
+        . . f f f e e e e e e f f f . . 
+        . . f f e 2 2 2 2 2 2 e e f . . 
+        . . f e 2 f f f f f f 2 e f . . 
+        . . f f f f e e e e f f f f . . 
+        . f f e f b f 4 4 f b f e f f . 
+        . f e e 4 1 f d d f 1 4 e e f . 
+        . . f f f f d d d d d e e f . . 
+        . f d d d d f 4 4 4 e e f . . . 
+        . f b b b b f 2 2 2 2 f 4 e . . 
+        . f b b b b f 2 2 2 2 f d 4 . . 
+        . . f c c f 4 5 5 4 4 f 4 4 . . 
+        . . . f f f f f f f f . . . . . 
+        . . . . . f f . . f f . . . . . 
+        `,img`
+        . . . . . . . . . . . . . . . . 
+        . . . . . . f f f f . . . . . . 
+        . . . . f f f 2 2 f f f . . . . 
+        . . . f f f 2 2 2 2 f f f . . . 
+        . . f f f e e e e e e f f f . . 
+        . . f f e 2 2 2 2 2 2 e e f . . 
+        . f f e 2 f f f f f f 2 e f f . 
+        . f f f f f e e e e f f f f f . 
+        . . f e f b f 4 4 f b f e f . . 
+        . f f e 4 1 f d d f 1 4 e f . . 
+        f d f f e 4 d d d d 4 e f e . . 
+        f b f e f 2 2 2 2 e d d 4 e . . 
+        f b f 4 f 2 2 2 2 e d d e . . . 
+        f c f . f 4 4 5 5 f e e . . . . 
+        . f f . f f f f f f f . . . . . 
+        . . . . f f f . . . . . . . . . 
+        `,img`
+        . . . . . . . . . . . . . . . . 
+        . . . . . . f f f f . . . . . . 
+        . . . . f f f 2 2 f f f . . . . 
+        . . . f f f 2 2 2 2 f f f . . . 
+        . . f f f e e e e e e f f f . . 
+        . . f e e 2 2 2 2 2 2 e f f . . 
+        . f f e 2 f f f f f f 2 e f f . 
+        . f f f f f e e e e f f f f f . 
+        . . f e f b f 4 4 f b f e f . . 
+        . . f e 4 1 f d d f 1 4 e f . . 
+        . . e f f f f d d d 4 e f . . . 
+        . . f d d d d f 2 2 2 f e f . . 
+        . . f b b b b f 2 2 2 f 4 e . . 
+        . . f b b b b f 5 4 4 f . . . . 
+        . . . f c c f f f f f f . . . . 
+        . . . . f f . . . f f f . . . . 
+        `,img`
+        . . . . . . . . . . . . . . . . 
+        . . . . . . f f f f . . . . . . 
+        . . . . f f f 2 2 f f f . . . . 
+        . . . f f f 2 2 2 2 f f f . . . 
+        . . f f f e e e e e e f f f . . 
+        . . f e e 2 2 2 2 2 2 e f f . . 
+        . f f e 2 f f f f f f 2 e f f . 
+        . f f f f f e e e e f f f f f . 
+        . . f e f b f 4 4 f b f e f . . 
+        . . f e 4 1 f d d f 1 4 e f f . 
+        . . e f e 4 d d d d 4 e f f d f 
+        . . e 4 d d e 2 2 2 2 f e f b f 
+        . . . e d d e 2 2 2 2 f 4 f b f 
+        . . . . e e f 5 5 4 4 f . f c f 
+        . . . . . f f f f f f f . f f . 
+        . . . . . . . . . f f f . . . . 
+        `],
+    200,
+    true
+    )
+    badguy.follow(person, 20)
+})
+let donut: Sprite = null
 let badguy: Sprite = null
 let person: Sprite = null
 scene.setBackgroundImage(img`
@@ -144,45 +267,72 @@ scene.setBackgroundImage(img`
     bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
     `)
 person = sprites.create(img`
+    . . . . . . . . . . . . . . . . 
     . . . . . . f f f f . . . . . . 
     . . . . f f f 2 2 f f f . . . . 
     . . . f f f 2 2 2 2 f f f . . . 
     . . f f f e e e e e e f f f . . 
-    . . f f e 2 2 2 2 2 2 e e f . . 
-    . . f e 2 f f f f f f 2 e f . . 
-    . . f f f f e e e e f f f f . . 
-    . f f e f b f 4 4 f b f e f f . 
-    . f e e 4 1 f d d f 1 4 e e f . 
-    . . f f f f d d d d d e e f . . 
-    . f d d d d f 4 4 4 e e f . . . 
-    . f b b b b f 2 2 2 2 f 4 e . . 
-    . f b b b b f 2 2 2 2 f d 4 . . 
-    . . f c c f 4 5 5 4 4 f 4 4 . . 
-    . . . f f f f f f f f . . . . . 
-    . . . . . f f . . f f . . . . . 
+    . . f e e 2 2 2 2 2 2 e f f . . 
+    . f f e 2 f f f f f f 2 e f f . 
+    . f f f f f e e e e f f f f f . 
+    . . f e f b f 4 4 f b f e f . . 
+    . . f e 4 1 f d d f 1 4 e f . . 
+    . . e f f f f d d d 4 e f . . . 
+    . . f d d d d f 2 2 2 f e f . . 
+    . . f b b b b f 2 2 2 f 4 e . . 
+    . . f b b b b f 5 4 4 f . . . . 
+    . . . f c c f f f f f f . . . . 
+    . . . . f f . . . f f f . . . . 
     `, SpriteKind.Player)
 controller.moveSprite(person, 100, 100)
 badguy = sprites.create(img`
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . b 5 5 b . . . 
-    . . . . . . b b b b b b . . . . 
-    . . . . . b b 5 5 5 5 5 b . . . 
-    . b b b b b 5 5 5 5 5 5 5 b . . 
-    . b d 5 b 5 5 5 5 5 5 5 5 b . . 
-    . . b 5 5 b 5 d 1 f 5 d 4 f . . 
-    . . b d 5 5 b 1 f f 5 4 4 c . . 
-    b b d b 5 5 5 d f b 4 4 4 4 b . 
-    b d d c d 5 5 b 5 4 4 4 4 4 4 b 
-    c d d d c c b 5 5 5 5 5 5 5 b . 
-    c b d d d d d 5 5 5 5 5 5 5 b . 
-    . c d d d d d d 5 5 5 5 5 d b . 
-    . . c b d d d d d 5 5 5 b b . . 
-    . . . c c c c c c c c b b . . . 
-    `, SpriteKind.Player)
+    ........................
+    ........................
+    ........................
+    ........................
+    ..........ffff..........
+    ........ff1111ff........
+    .......fb111111bf.......
+    .......f11111111f.......
+    ......fd11111111df......
+    ......fd11111111df......
+    ......fddd1111dddf......
+    ......fbdbfddfbdbf......
+    ......fcdcf11fcdcf......
+    .......fb111111bf.......
+    ......fffcdb1bdffff.....
+    ....fc111cbfbfc111cf....
+    ....f1b1b1ffff1b1b1f....
+    ....fbfbffffffbfbfbf....
+    .........ffffff.........
+    ...........fff..........
+    ........................
+    ........................
+    ........................
+    ........................
+    `, SpriteKind.Enemy)
 badguy.setPosition(6, 76)
 badguy.follow(person, 20)
 person.setStayInScreen(true)
+donut = sprites.create(img`
+    . . . . . . b b b b a a . . . . 
+    . . . . b b d d d 3 3 3 a a . . 
+    . . . b d d d 3 3 3 3 3 3 a a . 
+    . . b d d 3 3 3 3 3 3 3 3 3 a . 
+    . b 3 d 3 3 3 3 3 b 3 3 3 3 a b 
+    . b 3 3 3 3 3 a a 3 3 3 3 3 a b 
+    b 3 3 3 3 3 a a 3 3 3 3 d a 4 b 
+    b 3 3 3 3 b a 3 3 3 3 3 d a 4 b 
+    b 3 3 3 3 3 3 3 3 3 3 d a 4 4 e 
+    a 3 3 3 3 3 3 3 3 3 d a 4 4 4 e 
+    a 3 3 3 3 3 3 3 d d a 4 4 4 e . 
+    a a 3 3 3 d d d a a 4 4 4 e e . 
+    . e a a a a a a 4 4 4 4 e e . . 
+    . . e e b b 4 4 4 4 b e e . . . 
+    . . . e e e e e e e e . . . . . 
+    . . . . . . . . . . . . . . . . 
+    `, SpriteKind.Food)
+donut.setPosition(randint(0, 100), randint(0, 100))
 info.setLife(3)
 animation.runImageAnimation(
 person,
@@ -261,107 +411,105 @@ true
 animation.runImageAnimation(
 badguy,
 [img`
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . b 5 5 b . . . 
-    . . . . . . b b b b b b . . . . 
-    . . . . . b b 5 5 5 5 5 b . . . 
-    . b b b b b 5 5 5 5 5 5 5 b . . 
-    . b d 5 b 5 5 5 5 5 5 5 5 b . . 
-    . . b 5 5 b 5 d 1 f 5 d 4 f . . 
-    . . b d 5 5 b 1 f f 5 4 4 c . . 
-    b b d b 5 5 5 d f b 4 4 4 4 b . 
-    b d d c d 5 5 b 5 4 4 4 4 4 4 b 
-    c d d d c c b 5 5 5 5 5 5 5 b . 
-    c b d d d d d 5 5 5 5 5 5 5 b . 
-    . c d d d d d d 5 5 5 5 5 d b . 
-    . . c b d d d d d 5 5 5 b b . . 
-    . . . c c c c c c c c b b . . . 
+    ........................
+    ........................
+    ........................
+    ........................
+    ..........ffff..........
+    ........ff1111ff........
+    .......fb111111bf.......
+    .......f11111111f.......
+    ......fd11111111df......
+    ......fd11111111df......
+    ......fddd1111dddf......
+    ......fbdbfddfbdbf......
+    ......fcdcf11fcdcf......
+    .......fb111111bf.......
+    ......fffcdb1bdffff.....
+    ....fc111cbfbfc111cf....
+    ....f1b1b1ffff1b1b1f....
+    ....fbfbffffffbfbfbf....
+    .........ffffff.........
+    ...........fff..........
+    ........................
+    ........................
+    ........................
+    ........................
     `,img`
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . b 5 b . . . 
-    . . . . . . . . . b 5 b . . . . 
-    . . . . . . b b b b b b . . . . 
-    . . . . . b b 5 5 5 5 5 b . . . 
-    . b b b b b 5 5 5 5 5 5 5 b . . 
-    . b d 5 b 5 5 5 5 5 5 5 5 b . . 
-    . . b 5 5 b 5 d 1 f 5 d 4 f . . 
-    . . b d 5 5 b 1 f f 5 4 4 c . . 
-    b b d b 5 5 5 d f b 4 4 4 4 4 b 
-    b d d c d 5 5 b 5 4 4 4 4 4 b . 
-    c d d d c c b 5 5 5 5 5 5 5 b . 
-    c b d d d d d 5 5 5 5 5 5 5 b . 
-    . c d d d d d d 5 5 5 5 5 d b . 
-    . . c b d d d d d 5 5 5 b b . . 
-    . . . c c c c c c c c b b . . . 
+    ........................
+    ........................
+    ........................
+    ........................
+    ..........ffff..........
+    ........ff1111ff........
+    .......fb111111bf.......
+    .......f11111111f.......
+    ......fd11111111df......
+    ......fd11111111df......
+    ......fddd1111dddf......
+    ......fbdbfddfbdbf......
+    ......fcdcf11fcdcf......
+    .......fb111111ffff.....
+    ......fffcdb1bc111cf....
+    ....fc111cbfbf1b1b1f....
+    ....f1b1b1ffffbfbfbf....
+    ....fbfbfffffff.........
+    .........fffff..........
+    ..........fff...........
+    ........................
+    ........................
+    ........................
+    ........................
     `,img`
-    . . . . . . . . . . b 5 b . . . 
-    . . . . . . . . . b 5 b . . . . 
-    . . . . . . . . . b c . . . . . 
-    . . . . . . b b b b b b . . . . 
-    . . . . . b b 5 5 5 5 5 b . . . 
-    . . . . b b 5 d 1 f 5 5 d f . . 
-    . . . . b 5 5 1 f f 5 d 4 c . . 
-    . . . . b 5 5 d f b d d 4 4 . . 
-    b d d d b b d 5 5 5 4 4 4 4 4 b 
-    b b d 5 5 5 b 5 5 4 4 4 4 4 b . 
-    b d c 5 5 5 5 d 5 5 5 5 5 b . . 
-    c d d c d 5 5 b 5 5 5 5 5 5 b . 
-    c b d d c c b 5 5 5 5 5 5 5 b . 
-    . c d d d d d d 5 5 5 5 5 d b . 
-    . . c b d d d d d 5 5 5 b b . . 
-    . . . c c c c c c c c b b . . . 
+    ........................
+    ........................
+    ........................
+    ........................
+    ..........ffff..........
+    ........ff1111ff........
+    .......fb111111bf.......
+    .......f11111111f.......
+    ......fd11111111df......
+    ......fd11111111df......
+    ......fddd1111dddf......
+    ......fbdbfddfbdbf......
+    ......fcdcf11fcdcf......
+    .......fb111111bf.......
+    ......fffcdb1bdffff.....
+    ....fc111cbfbfc111cf....
+    ....f1b1b1ffff1b1b1f....
+    ....fbfbffffffbfbfbf....
+    .........ffffff.........
+    ...........fff..........
+    ........................
+    ........................
+    ........................
+    ........................
     `,img`
-    . . . . . . . . . . b 5 b . . . 
-    . . . . . . . . . b 5 b . . . . 
-    . . . . . . b b b b b b . . . . 
-    . . . . . b b 5 5 5 5 5 b . . . 
-    . . . . b b 5 d 1 f 5 d 4 c . . 
-    . . . . b 5 5 1 f f d d 4 4 4 b 
-    . . . . b 5 5 d f b 4 4 4 4 b . 
-    . . . b d 5 5 5 5 4 4 4 4 b . . 
-    . . b d d 5 5 5 5 5 5 5 5 b . . 
-    . b d d d d 5 5 5 5 5 5 5 5 b . 
-    b d d d b b b 5 5 5 5 5 5 5 b . 
-    c d d b 5 5 d c 5 5 5 5 5 5 b . 
-    c b b d 5 d c d 5 5 5 5 5 5 b . 
-    . b 5 5 b c d d 5 5 5 5 5 d b . 
-    b b c c c d d d d 5 5 5 b b . . 
-    . . . c c c c c c c c b b . . . 
-    `,img`
-    . . . . . . . . . . b 5 b . . . 
-    . . . . . . . . . b 5 b . . . . 
-    . . . . . . b b b b b b . . . . 
-    . . . . . b b 5 5 5 5 5 b . . . 
-    . . . . b b 5 d 1 f 5 d 4 c . . 
-    . . . . b 5 5 1 f f d d 4 4 4 b 
-    . . . . b 5 5 d f b 4 4 4 4 b . 
-    . . . b d 5 5 5 5 4 4 4 4 b . . 
-    . b b d d d 5 5 5 5 5 5 5 b . . 
-    b d d d b b b 5 5 5 5 5 5 5 b . 
-    c d d b 5 5 d c 5 5 5 5 5 5 b . 
-    c b b d 5 d c d 5 5 5 5 5 5 b . 
-    c b 5 5 b c d d 5 5 5 5 5 5 b . 
-    b b c c c d d d 5 5 5 5 5 d b . 
-    . . . . c c d d d 5 5 5 b b . . 
-    . . . . . . c c c c c b b . . . 
-    `,img`
-    . . . . . . . . . . b 5 b . . . 
-    . . . . . . . . . b 5 b . . . . 
-    . . . . . . b b b b b b . . . . 
-    . . . . . b b 5 5 5 5 5 b . . . 
-    . . . . b b 5 d 1 f 5 5 d f . . 
-    . . . . b 5 5 1 f f 5 d 4 c . . 
-    . . . . b 5 5 d f b d d 4 4 . . 
-    . b b b d 5 5 5 5 5 4 4 4 4 4 b 
-    b d d d b b d 5 5 4 4 4 4 4 b . 
-    b b d 5 5 5 b 5 5 5 5 5 5 b . . 
-    c d c 5 5 5 5 d 5 5 5 5 5 5 b . 
-    c b d c d 5 5 b 5 5 5 5 5 5 b . 
-    . c d d c c b d 5 5 5 5 5 d b . 
-    . . c b d d d d d 5 5 5 b b . . 
-    . . . c c c c c c c c b b . . . 
-    . . . . . . . . . . . . . . . . 
+    ........................
+    ........................
+    ........................
+    ........................
+    ..........ffff..........
+    ........ff1111ff........
+    .......fb111111bf.......
+    .......f11111111f.......
+    ......fd11111111df......
+    ......fd11111111df......
+    ......fddd1111dddf......
+    ......fbdbfddfbdbf......
+    ......fcdcf11fcdcf......
+    .....ffff111111bf.......
+    ....fc111cdb1bdfff......
+    ....f1b1bcbfbfc111cf....
+    ....fbfbfbffff1b1b1f....
+    .........fffffffbfbf....
+    ..........fffff.........
+    ...........fff..........
+    ........................
+    ........................
+    ........................
+    ........................
     `],
 200,
 true
