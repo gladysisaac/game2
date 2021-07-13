@@ -1,12 +1,25 @@
-controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
-    badguy.setPosition(randint(0, 100), randint(0, 100))
-})
-function onScoreTen () {
-    if (info.score() == 10) {
-        game.over(true)
-        game.splash("You did it!!")
-    }
+namespace SpriteKind {
+    export const energy = SpriteKind.create()
 }
+sprites.onOverlap(SpriteKind.Player, SpriteKind.energy, function (sprite, otherSprite) {
+    otherSprite.destroy()
+    info.changeScoreBy(1)
+    if (info.score() == 20) {
+        game.over(true)
+    } else {
+        coin = sprites.create(img`
+            . . . b b . . . 
+            . . b 5 5 b . . 
+            . b 5 1 d 5 b . 
+            . b 5 1 3 5 b . 
+            . c d 1 3 5 c . 
+            . c d d 1 5 c . 
+            . . f d d f . . 
+            . . . f f . . . 
+            `, SpriteKind.energy)
+        coin.setPosition(randint(0, 100), randint(0, 100))
+    }
+})
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     controller.moveSprite(person, 300, 300)
 })
@@ -21,7 +34,7 @@ controller.A.onEvent(ControllerButtonEvent.Released, function () {
 })
 sprites.onOverlap(SpriteKind.Enemy, SpriteKind.Player, function (sprite, otherSprite) {
     info.changeLifeBy(-1)
-    otherSprite.destroy(effects.ashes, 500)
+    otherSprite.destroy(effects.ashes, 50)
     pause(1000)
     person = sprites.create(img`
         . . . . . . . . . . . . . . . . 
@@ -120,13 +133,11 @@ sprites.onOverlap(SpriteKind.Enemy, SpriteKind.Player, function (sprite, otherSp
     )
     badguy.follow(person, 20)
 })
-info.onLifeZero(function () {
-    game.over(false)
-})
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Food, function (sprite, otherSprite) {
     otherSprite.destroy()
-    info.changeScoreBy(1)
+    info.changeLifeBy(1)
 })
+let coin: Sprite = null
 let badguy: Sprite = null
 let person: Sprite = null
 scene.setBackgroundImage(img`
@@ -318,6 +329,16 @@ let donut = sprites.create(img`
     . . . . . . . . . . . . . . . . 
     `, SpriteKind.Food)
 donut.setPosition(randint(0, 100), randint(0, 100))
+coin = sprites.create(img`
+    . . . b b . . . 
+    . . b 5 5 b . . 
+    . b 5 1 d 5 b . 
+    . b 5 1 3 5 b . 
+    . c d 1 3 5 c . 
+    . c d d 1 5 c . 
+    . . f d d f . . 
+    . . . f f . . . 
+    `, SpriteKind.energy)
 info.setLife(3)
 info.setScore(0)
 animation.runImageAnimation(
@@ -500,7 +521,13 @@ badguy,
 200,
 true
 )
-game.onUpdateInterval(5000, function () {
+forever(function () {
+    music.playMelody("E B C5 A B G A D ", 100)
+})
+forever(function () {
+    music.playMelody("E E C5 C5 B B A D ", 100)
+})
+game.onUpdateInterval(10000, function () {
     donut = sprites.create(img`
         . . . . . . b b b b a a . . . . 
         . . . . b b d d d 3 3 3 a a . . 
@@ -520,10 +547,33 @@ game.onUpdateInterval(5000, function () {
         . . . . . . . . . . . . . . . . 
         `, SpriteKind.Food)
     donut.setPosition(randint(0, 100), randint(0, 100))
-})
-forever(function () {
-    music.playMelody("E B C5 A B G A D ", 100)
-})
-forever(function () {
-    music.playMelody("E E C5 C5 B B A D ", 100)
+    badguy.destroy()
+    badguy = sprites.create(img`
+        ........................
+        ........................
+        ........................
+        ........................
+        ..........ffff..........
+        ........ff1111ff........
+        .......fb111111bf.......
+        .......f11111111f.......
+        ......fd11111111df......
+        ......fd11111111df......
+        ......fddd1111dddf......
+        ......fbdbfddfbdbf......
+        ......fcdcf11fcdcf......
+        .......fb111111bf.......
+        ......fffcdb1bdffff.....
+        ....fc111cbfbfc111cf....
+        ....f1b1b1ffff1b1b1f....
+        ....fbfbffffffbfbfbf....
+        .........ffffff.........
+        ...........fff..........
+        ........................
+        ........................
+        ........................
+        ........................
+        `, SpriteKind.Enemy)
+    badguy.setPosition(randint(0, 100), randint(0, 100))
+    badguy.follow(person, 20)
 })
