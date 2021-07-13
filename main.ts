@@ -1,6 +1,12 @@
 controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
     badguy.setPosition(randint(0, 100), randint(0, 100))
 })
+function onScoreTen () {
+    if (info.score() == 10) {
+        game.over(true)
+        game.splash("You did it!!")
+    }
+}
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     controller.moveSprite(person, 300, 300)
 })
@@ -13,36 +19,9 @@ controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
 controller.A.onEvent(ControllerButtonEvent.Released, function () {
     controller.moveSprite(person, 100, 100)
 })
-info.onLifeZero(function () {
-    person.destroy(effects.spray, 500)
-    game.over(false)
-})
-sprites.onOverlap(SpriteKind.Player, SpriteKind.Food, function (sprite, otherSprite) {
-    otherSprite.destroy()
-    donut = sprites.create(img`
-        . . . . . . b b b b a a . . . . 
-        . . . . b b d d d 3 3 3 a a . . 
-        . . . b d d d 3 3 3 3 3 3 a a . 
-        . . b d d 3 3 3 3 3 3 3 3 3 a . 
-        . b 3 d 3 3 3 3 3 b 3 3 3 3 a b 
-        . b 3 3 3 3 3 a a 3 3 3 3 3 a b 
-        b 3 3 3 3 3 a a 3 3 3 3 d a 4 b 
-        b 3 3 3 3 b a 3 3 3 3 3 d a 4 b 
-        b 3 3 3 3 3 3 3 3 3 3 d a 4 4 e 
-        a 3 3 3 3 3 3 3 3 3 d a 4 4 4 e 
-        a 3 3 3 3 3 3 3 d d a 4 4 4 e . 
-        a a 3 3 3 d d d a a 4 4 4 e e . 
-        . e a a a a a a 4 4 4 4 e e . . 
-        . . e e b b 4 4 4 4 b e e . . . 
-        . . . e e e e e e e e . . . . . 
-        . . . . . . . . . . . . . . . . 
-        `, SpriteKind.Food)
-    donut.setPosition(randint(0, 100), randint(0, 100))
-    info.changeLifeBy(1)
-})
-sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite, otherSprite) {
+sprites.onOverlap(SpriteKind.Enemy, SpriteKind.Player, function (sprite, otherSprite) {
     info.changeLifeBy(-1)
-    sprite.destroy(effects.ashes, 500)
+    otherSprite.destroy(effects.ashes, 500)
     pause(1000)
     person = sprites.create(img`
         . . . . . . . . . . . . . . . . 
@@ -141,7 +120,13 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite, otherSp
     )
     badguy.follow(person, 20)
 })
-let donut: Sprite = null
+info.onLifeZero(function () {
+    game.over(false)
+})
+sprites.onOverlap(SpriteKind.Player, SpriteKind.Food, function (sprite, otherSprite) {
+    otherSprite.destroy()
+    info.changeScoreBy(1)
+})
 let badguy: Sprite = null
 let person: Sprite = null
 scene.setBackgroundImage(img`
@@ -314,7 +299,7 @@ badguy = sprites.create(img`
 badguy.setPosition(6, 76)
 badguy.follow(person, 20)
 person.setStayInScreen(true)
-donut = sprites.create(img`
+let donut = sprites.create(img`
     . . . . . . b b b b a a . . . . 
     . . . . b b d d d 3 3 3 a a . . 
     . . . b d d d 3 3 3 3 3 3 a a . 
@@ -334,6 +319,7 @@ donut = sprites.create(img`
     `, SpriteKind.Food)
 donut.setPosition(randint(0, 100), randint(0, 100))
 info.setLife(3)
+info.setScore(0)
 animation.runImageAnimation(
 person,
 [img`
@@ -514,3 +500,30 @@ badguy,
 200,
 true
 )
+game.onUpdateInterval(5000, function () {
+    donut = sprites.create(img`
+        . . . . . . b b b b a a . . . . 
+        . . . . b b d d d 3 3 3 a a . . 
+        . . . b d d d 3 3 3 3 3 3 a a . 
+        . . b d d 3 3 3 3 3 3 3 3 3 a . 
+        . b 3 d 3 3 3 3 3 b 3 3 3 3 a b 
+        . b 3 3 3 3 3 a a 3 3 3 3 3 a b 
+        b 3 3 3 3 3 a a 3 3 3 3 d a 4 b 
+        b 3 3 3 3 b a 3 3 3 3 3 d a 4 b 
+        b 3 3 3 3 3 3 3 3 3 3 d a 4 4 e 
+        a 3 3 3 3 3 3 3 3 3 d a 4 4 4 e 
+        a 3 3 3 3 3 3 3 d d a 4 4 4 e . 
+        a a 3 3 3 d d d a a 4 4 4 e e . 
+        . e a a a a a a 4 4 4 4 e e . . 
+        . . e e b b 4 4 4 4 b e e . . . 
+        . . . e e e e e e e e . . . . . 
+        . . . . . . . . . . . . . . . . 
+        `, SpriteKind.Food)
+    donut.setPosition(randint(0, 100), randint(0, 100))
+})
+forever(function () {
+    music.playMelody("E B C5 A B G A D ", 100)
+})
+forever(function () {
+    music.playMelody("E E C5 C5 B B A D ", 100)
+})
