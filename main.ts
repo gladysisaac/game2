@@ -341,7 +341,7 @@ badguy = sprites.create(img`
     ........................
     ........................
     `, SpriteKind.Enemy)
-badguy.setPosition(6, 76)
+badguy.setPosition(randint(0, 100), randint(0, 100))
 badguy.follow(monke, 20)
 monke.setStayInScreen(true)
 let banana = sprites.create(img`
