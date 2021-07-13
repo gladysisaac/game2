@@ -1,6 +1,9 @@
 namespace SpriteKind {
     export const energy = SpriteKind.create()
 }
+controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
+    monke.setPosition(randint(0, 100), randint(0, 100))
+})
 sprites.onOverlap(SpriteKind.Player, SpriteKind.energy, function (sprite, otherSprite) {
     otherSprite.destroy()
     info.changeScoreBy(1)
