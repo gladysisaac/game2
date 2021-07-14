@@ -302,7 +302,7 @@ scene.setBackgroundImage(img`
 game.showLongText("Welcome to my game!!", DialogLayout.Bottom)
 game.showLongText("The objective of this game is to collect 20 coins. ", DialogLayout.Bottom)
 game.showLongText("You can eat the bananas to get extra lives!", DialogLayout.Bottom)
-game.showLongText("But there's a TWIST.. :)", DialogLayout.Bottom)
+game.showLongText("But there's a TWIST.. ", DialogLayout.Bottom)
 game.showLongText("Every 10 seconds the monster changes location. Be careful! ", DialogLayout.Bottom)
 monke = sprites.create(img`
     . . . . . f f f f f . . . . . . 
