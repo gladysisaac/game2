@@ -177,11 +177,6 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Food, function (sprite, otherSpr
 let coin: Sprite = null
 let badguy: Sprite = null
 let monke: Sprite = null
-game.showLongText("Welcome to my game!", DialogLayout.Bottom)
-game.showLongText("The objective is to collect 50 coins while the monster chases you.", DialogLayout.Bottom)
-game.showLongText("You can eat the bananas to get extra lives!!", DialogLayout.Bottom)
-game.showLongText("But there's a twist...", DialogLayout.Bottom)
-game.showLongText("The monster changes location every 10 seconds. Be careful!", DialogLayout.Bottom)
 scene.setBackgroundImage(img`
     9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999
     9999999999999999999999999999999999999999999999999999111111111119999999999999999999999999999999999999991111999999999999999999999999999999999999999999111111111111
@@ -305,7 +300,7 @@ scene.setBackgroundImage(img`
     bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
     `)
 game.showLongText("Welcome to my game!!", DialogLayout.Bottom)
-game.showLongText("The objective of this game is to collect 20 coins. ", DialogLayout.Bottom)
+game.showLongText("The objective of this game is to collect 50 coins while the monster chases you. ", DialogLayout.Bottom)
 game.showLongText("You can eat the bananas to get extra lives!", DialogLayout.Bottom)
 game.showLongText("But there's a TWIST.. ", DialogLayout.Bottom)
 game.showLongText("Every 10 seconds the monster changes location. Be careful! ", DialogLayout.Bottom)
@@ -600,12 +595,12 @@ badguy,
 true
 )
 forever(function () {
-    music.playMelody("E B C5 A B G A D ", 100)
-})
-forever(function () {
     music.playMelody("E E C5 C5 B B A D ", 100)
 })
-game.onUpdateInterval(10000, function () {
+forever(function () {
+    music.playMelody("E B C5 A B G A D ", 100)
+})
+game.onUpdateInterval(30000, function () {
     banana = sprites.create(img`
         . . . . . . . . . . . . 
         . 1 1 . . . . . . . . . 
@@ -621,6 +616,8 @@ game.onUpdateInterval(10000, function () {
         . . . . . 1 1 1 . . . . 
         `, SpriteKind.Food)
     banana.setPosition(randint(0, 100), randint(0, 100))
+})
+game.onUpdateInterval(10000, function () {
     badguy.destroy()
     badguy = sprites.create(img`
         ........................
