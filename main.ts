@@ -7,7 +7,7 @@ controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
 sprites.onOverlap(SpriteKind.Player, SpriteKind.energy, function (sprite, otherSprite) {
     otherSprite.destroy()
     info.changeScoreBy(1)
-    if (info.score() == 20) {
+    if (info.score() == 50) {
         game.over(true)
     } else {
         coin = sprites.create(img`
@@ -177,6 +177,11 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Food, function (sprite, otherSpr
 let coin: Sprite = null
 let badguy: Sprite = null
 let monke: Sprite = null
+game.showLongText("Welcome to my game!", DialogLayout.Bottom)
+game.showLongText("The objective is to collect 50 coins while the monster chases you.", DialogLayout.Bottom)
+game.showLongText("You can eat the bananas to get extra lives!!", DialogLayout.Bottom)
+game.showLongText("But there's a twist...", DialogLayout.Bottom)
+game.showLongText("The monster changes location every 10 seconds. Be careful!", DialogLayout.Bottom)
 scene.setBackgroundImage(img`
     9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999
     9999999999999999999999999999999999999999999999999999111111111119999999999999999999999999999999999999991111999999999999999999999999999999999999999999111111111111
