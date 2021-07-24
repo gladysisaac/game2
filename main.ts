@@ -7,8 +7,28 @@ controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
 sprites.onOverlap(SpriteKind.Player, SpriteKind.energy, function (sprite, otherSprite) {
     otherSprite.destroy()
     info.changeScoreBy(1)
-    if (info.score() == 50) {
-        game.over(true)
+    if (info.score() == 20) {
+        if (info.life() == 3) {
+            game.splash("You passed the game with 3 lives? Here, have an extra point! ")
+            info.changeScoreBy(1)
+            game.over(true)
+        } else if (info.life() == 4) {
+            game.splash("You passed the game with 4 lives? Here, have 3 extra points! ")
+            info.changeScoreBy(3)
+            game.over(true)
+        } else if (info.life() == 5) {
+            game.splash("You passed the game with 5 lives? Here, have 5 extra points! ")
+            info.changeScoreBy(5)
+            game.over(true)
+        } else if (info.life() >= 5) {
+            game.splash("You passed the game with 6 or more lives? Here, have 10 extra points! ")
+            info.changeScoreBy(10)
+            game.over(true)
+        } else {
+            game.splash("You passed the game with less than 3 lives. You deserve a penalty for that...")
+            scene.setBackgroundColor(15)
+            game.over(false)
+        }
     } else {
         coin = sprites.create(img`
             . . . b b . . . 
@@ -594,11 +614,11 @@ badguy,
 500,
 true
 )
-forever(function () {
-    music.playMelody("E E C5 C5 B B A D ", 100)
+game.onUpdateInterval(7000, function () {
+    banana.destroy()
 })
 forever(function () {
-    music.playMelody("E B C5 A B G A D ", 100)
+    music.playMelody("E B C5 A B G A D ", 110)
 })
 game.onUpdateInterval(30000, function () {
     banana = sprites.create(img`
