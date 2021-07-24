@@ -20,7 +20,7 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.energy, function (sprite, otherS
             game.splash("You passed the game with 5 lives? Here, have 5 extra points! ")
             info.changeScoreBy(5)
             game.over(true)
-        } else if (info.life() >= 5) {
+        } else if (info.life() >= 6) {
             game.splash("You passed the game with 6 or more lives? Here, have 10 extra points! ")
             info.changeScoreBy(10)
             game.over(true)
