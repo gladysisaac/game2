@@ -7,7 +7,7 @@ controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
 sprites.onOverlap(SpriteKind.Player, SpriteKind.energy, function (sprite, otherSprite) {
     otherSprite.destroy()
     info.changeScoreBy(1)
-    if (info.score() == 20) {
+    if (info.score() == 50) {
         if (info.life() == 3) {
             game.splash("You passed the game with 3 lives? Here, have an extra point! ")
             info.changeScoreBy(1)
@@ -25,8 +25,8 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.energy, function (sprite, otherS
             info.changeScoreBy(10)
             game.over(true)
         } else {
-            game.splash("You passed the game with less than 3 lives. You deserve a penalty for that...")
             scene.setBackgroundColor(15)
+            game.splash("You passed the game with less than 3 lives. You deserve a penalty for that...")
             game.over(false)
         }
     } else {
